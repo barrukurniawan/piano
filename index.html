@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Piano</title>
+    <title>Khalid Piano</title>
     <style>
         *,
         *::before,
@@ -24,30 +24,31 @@
             user-select: none;
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
+            overflow-x: auto;
         }
 
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px;
-            padding: 20px;
+            gap: 28px;
+            padding: 30px 20px;
         }
 
         h1 {
             color: #e0e0e0;
-            font-size: 1.8rem;
+            font-size: 2.45rem;
             font-weight: 600;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-transform: uppercase;
         }
 
         .piano {
             position: relative;
             display: flex;
-            height: 280px;
-            border-radius: 0 0 12px 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.3);
+            height: 588px;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.5), 0 8px 16px rgba(0, 0, 0, 0.3);
             background: #2a2a2a;
         }
 
@@ -62,44 +63,44 @@
         }
 
         .white {
-            width: 56px;
+            width: 118px;
             height: 100%;
             background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 3%, #e8e8e8 100%);
-            border: 1px solid #bbb;
+            border: 2px solid #bbb;
             border-top: none;
-            border-radius: 0 0 6px 6px;
+            border-radius: 0 0 12px 12px;
             z-index: 1;
         }
 
         .white:active,
         .white.active {
             background: linear-gradient(180deg, #e0e0e0 0%, #d0d0d0 3%, #c8c8c8 100%);
-            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: inset 0 8px 16px rgba(0, 0, 0, 0.15);
         }
 
         .black {
-            width: 36px;
+            width: 76px;
             height: 60%;
             background: linear-gradient(180deg, #2a2a2a 0%, #111 100%);
-            border: 1px solid #000;
+            border: 2px solid #000;
             border-top: none;
-            border-radius: 0 0 6px 6px;
+            border-radius: 0 0 12px 12px;
             z-index: 2;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
         }
 
         .black:active,
         .black.active {
             background: linear-gradient(180deg, #444 0%, #222 100%);
-            box-shadow: inset 0 4px 8px #000, 0 2px 4px rgba(0, 0, 0, 0.5);
+            box-shadow: inset 0 8px 16px #000, 0 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         .label {
             position: absolute;
-            bottom: 12px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 11px;
+            font-size: 23px;
             font-weight: 700;
             color: #999;
             letter-spacing: 1px;
@@ -107,14 +108,14 @@
         }
 
         .black .label {
-            bottom: 10px;
+            bottom: 21px;
             color: #888;
-            font-size: 10px;
+            font-size: 21px;
         }
 
         .controls {
             display: flex;
-            gap: 16px;
+            gap: 20px;
             align-items: center;
             flex-wrap: wrap;
             justify-content: center;
@@ -123,12 +124,12 @@
         .control-group {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         label {
             color: #bbb;
-            font-size: 0.85rem;
+            font-size: 1.1rem;
         }
 
         select {
@@ -136,8 +137,8 @@
             color: #e0e0e0;
             border: 1px solid #444;
             border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 0.85rem;
+            padding: 8px 14px;
+            font-size: 1rem;
             cursor: pointer;
             outline: none;
         }
@@ -151,38 +152,37 @@
             border-radius: 6px;
             cursor: pointer;
             outline: none;
-            width: 100px;
+            width: 150px;
             accent-color: #7c8;
             padding: 0;
-            /* Diperbaiki agar thumb bisa sampai ujung */
-            height: 16px;
+            height: 18px;
         }
 
         .checkbox-label {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             cursor: pointer;
         }
 
         .checkbox-label input {
             accent-color: #7c8;
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
         }
 
         .key-hint {
             position: absolute;
-            bottom: 34px;
+            bottom: 71px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 10px;
+            font-size: 21px;
             font-weight: bold;
             color: #bbb;
             pointer-events: none;
             background: rgba(0, 0, 0, 0.5);
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 4px 12px;
+            border-radius: 8px;
             opacity: 0;
             transition: opacity 0.15s;
         }
@@ -196,71 +196,72 @@
         .black .key-hint {
             background: rgba(255, 255, 255, 0.2);
             color: #fff;
-            bottom: 28px;
+            bottom: 59px;
+        }
+
+        /* Penyesuaian Responsif */
+        @media (max-width: 1400px) {
+            .piano {
+                height: 420px;
+            }
+
+            .white {
+                width: 88px;
+            }
+
+            .black {
+                width: 59px;
+            }
+
+            .label {
+                font-size: 19px;
+                bottom: 17px;
+            }
+
+            .key-hint {
+                bottom: 59px;
+                font-size: 19px;
+            }
+
+            .black .key-hint {
+                bottom: 50px;
+            }
+
+            h1 {
+                font-size: 2.1rem;
+            }
         }
 
         @media (max-width: 900px) {
             .piano {
-                height: 200px;
+                height: 336px;
             }
 
             .white {
-                width: 42px;
+                width: 67px;
             }
 
             .black {
-                width: 28px;
+                width: 46px;
             }
 
             .label {
-                font-size: 9px;
-                bottom: 8px;
+                font-size: 15px;
+                bottom: 13px;
             }
 
             .key-hint {
-                bottom: 28px;
-                font-size: 9px;
+                bottom: 46px;
+                font-size: 17px;
+                padding: 3px 9px;
             }
 
             .black .key-hint {
-                bottom: 24px;
+                bottom: 38px;
             }
 
             h1 {
-                font-size: 1.4rem;
-            }
-        }
-
-        @media (max-width: 680px) {
-            .piano {
-                height: 160px;
-            }
-
-            .white {
-                width: 32px;
-            }
-
-            .black {
-                width: 22px;
-            }
-
-            .label {
-                font-size: 7px;
-                bottom: 6px;
-            }
-
-            .key-hint {
-                bottom: 22px;
-                font-size: 8px;
-                padding: 1px 4px;
-            }
-
-            .black .key-hint {
-                bottom: 18px;
-            }
-
-            h1 {
-                font-size: 1.2rem;
+                font-size: 1.75rem;
             }
         }
     </style>
@@ -327,7 +328,7 @@
             waveform: 'sine',
             activeKeys: new Map(),
             keyMap: {},
-            randomBinds: new Map() // Melacak tombol ngacak yang ditekan
+            randomBinds: new Map()
         };
 
         const pianoEl = document.getElementById('piano');
@@ -345,10 +346,9 @@
             gain.connect(audioCtx.destination);
 
             let mainOsc = null;
-            let lfoOsc = null; // Ekstra LFO untuk efek hewan
+            let lfoOsc = null;
 
             if (['sine', 'square', 'sawtooth', 'triangle'].includes(type)) {
-                // STANDARD WAVES
                 gain.gain.setValueAtTime(0, audioCtx.currentTime);
                 gain.gain.linearRampToValueAtTime(state.volume, audioCtx.currentTime + 0.02);
 
@@ -359,8 +359,7 @@
                 mainOsc.start();
 
             } else if (type === 'pistol') {
-                // WHITE NOISE + FILTER (PISTOL)
-                const bufferSize = audioCtx.sampleRate * 1; // 1 detik noise
+                const bufferSize = audioCtx.sampleRate * 1;
                 const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const data = buffer.getChannelData(0);
                 for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
@@ -369,7 +368,7 @@
                 mainOsc.buffer = buffer;
 
                 gain.gain.setValueAtTime(state.volume, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25); // Cepat hilang
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
 
                 const filter = audioCtx.createBiquadFilter();
                 filter.type = 'lowpass';
@@ -381,14 +380,13 @@
                 mainOsc.start();
 
             } else if (type === 'kodok') {
-                // SAWTOOTH + MODULASI LFO (KODOK)
                 mainOsc = audioCtx.createOscillator();
                 mainOsc.type = 'sawtooth';
                 mainOsc.frequency.setValueAtTime(freq * 0.15, audioCtx.currentTime);
 
                 lfoOsc = audioCtx.createOscillator();
                 lfoOsc.type = 'square';
-                lfoOsc.frequency.value = 18; // Kecepatan ngorok
+                lfoOsc.frequency.value = 18;
 
                 const lfoGain = audioCtx.createGain();
                 lfoGain.gain.value = 1;
@@ -404,22 +402,20 @@
                 lfoOsc.start();
 
             } else if (type === 'ayam') {
-                // PITCH DROP (AYAM)
                 mainOsc = audioCtx.createOscillator();
                 mainOsc.type = 'square';
                 mainOsc.frequency.setValueAtTime(freq * 1.5, audioCtx.currentTime);
-                mainOsc.frequency.exponentialRampToValueAtTime(freq * 0.4, audioCtx.currentTime + 0.15); // Suara jatuh
+                mainOsc.frequency.exponentialRampToValueAtTime(freq * 0.4, audioCtx.currentTime + 0.15);
 
                 mainOsc.connect(gain);
 
                 gain.gain.setValueAtTime(0, audioCtx.currentTime);
                 gain.gain.linearRampToValueAtTime(state.volume, audioCtx.currentTime + 0.02);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3); // Cluck pendek
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
 
                 mainOsc.start();
 
             } else if (type === 'bebek') {
-                // FILTER SWEEP DOWN (BEBEK)
                 mainOsc = audioCtx.createOscillator();
                 mainOsc.type = 'sawtooth';
                 mainOsc.frequency.setValueAtTime(freq * 0.4, audioCtx.currentTime);
@@ -428,7 +424,7 @@
                 filter.type = 'bandpass';
                 filter.Q.value = 3;
                 filter.frequency.setValueAtTime(1500, audioCtx.currentTime);
-                filter.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.2); // Quack!
+                filter.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.2);
 
                 mainOsc.connect(filter);
                 filter.connect(gain);
@@ -450,7 +446,7 @@
 
             setTimeout(() => {
                 try { entry.osc.stop(); } catch (e) { }
-                if (entry.lfo) try { entry.lfo.stop(); } catch (e) { } // Stop kodok LFO
+                if (entry.lfo) try { entry.lfo.stop(); } catch (e) { }
             }, 300);
 
             state.activeKeys.delete(noteName);
@@ -522,8 +518,9 @@
                 pianoEl.appendChild(keyEl);
             });
 
-            const whiteW = window.innerWidth <= 680 ? 32 : window.innerWidth <= 900 ? 42 : 56;
-            const blackW = window.innerWidth <= 680 ? 22 : window.innerWidth <= 900 ? 28 : 36;
+            // Skala ukuran lebar JS disesuaikan 70% dari yang 3x lipat
+            const whiteW = window.innerWidth <= 900 ? 67 : window.innerWidth <= 1400 ? 88 : 118;
+            const blackW = window.innerWidth <= 900 ? 46 : window.innerWidth <= 1400 ? 59 : 76;
 
             blackNotes.forEach((data) => {
                 const noteName = data.letter + (oct + data.offset);
@@ -542,11 +539,10 @@
             if (e.repeat) return;
             let noteName = state.keyMap[e.key.toLowerCase()];
 
-            // Jika menekan sembarang tombol (di luar map)
             if (!noteName) {
                 const availableNotes = Object.values(state.keyMap);
-                noteName = availableNotes[Math.floor(Math.random() * availableNotes.length)]; // Pilih acak
-                state.randomBinds.set(e.code, noteName); // Simpan agar bisa distop nanti
+                noteName = availableNotes[Math.floor(Math.random() * availableNotes.length)];
+                state.randomBinds.set(e.code, noteName);
             }
 
             if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -559,7 +555,6 @@
         function handleKeyUp(e) {
             let noteName = state.keyMap[e.key.toLowerCase()];
 
-            // Deteksi bila yang dilepas adalah tombol sembarang (ngacak)
             if (!noteName) {
                 noteName = state.randomBinds.get(e.code);
                 state.randomBinds.delete(e.code);
