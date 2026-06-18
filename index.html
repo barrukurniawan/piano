@@ -1,500 +1,592 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Online Piano</title>
-<style>
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Piano</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-  background: #1a1a2e;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
+        body {
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  padding: 20px;
-}
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            padding: 20px;
+        }
 
-h1 {
-  color: #e0e0e0;
-  font-size: 1.8rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
+        h1 {
+            color: #e0e0e0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
 
-.piano {
-  position: relative;
-  display: flex;
-  height: 280px;
-  border-radius: 0 0 12px 12px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.3);
-  overflow: hidden;
-  background: #2a2a2a;
-}
+        .piano {
+            position: relative;
+            display: flex;
+            height: 280px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.3);
+            background: #2a2a2a;
+        }
 
-.key {
-  position: relative;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  transition: background 0.05s, box-shadow 0.05s;
-  touch-action: none;
-  -webkit-touch-callout: none;
-}
+        .key {
+            position: relative;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: background 0.05s, box-shadow 0.05s;
+            touch-action: none;
+            -webkit-touch-callout: none;
+        }
 
-.white {
-  width: 56px;
-  height: 100%;
-  background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 3%, #e8e8e8 100%);
-  border: 1px solid #bbb;
-  border-top: none;
-  border-radius: 0 0 6px 6px;
-  z-index: 1;
-}
+        .white {
+            width: 56px;
+            height: 100%;
+            background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 3%, #e8e8e8 100%);
+            border: 1px solid #bbb;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            z-index: 1;
+        }
 
-.white:active,
-.white.active {
-  background: linear-gradient(180deg, #e0e0e0 0%, #d0d0d0 3%, #c8c8c8 100%);
-  box-shadow: inset 0 4px 8px rgba(0,0,0,0.15);
-}
+        .white:active,
+        .white.active {
+            background: linear-gradient(180deg, #e0e0e0 0%, #d0d0d0 3%, #c8c8c8 100%);
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
 
-.black {
-  width: 36px;
-  height: 60%;
-  background: linear-gradient(180deg, #2a2a2a 0%, #111 100%);
-  border: 1px solid #000;
-  border-top: none;
-  border-radius: 0 0 6px 6px;
-  z-index: 2;
-  margin-left: -18px;
-  margin-right: -18px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
+        .black {
+            width: 36px;
+            height: 60%;
+            background: linear-gradient(180deg, #2a2a2a 0%, #111 100%);
+            border: 1px solid #000;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            z-index: 2;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
 
-.black:active,
-.black.active {
-  background: linear-gradient(180deg, #444 0%, #222 100%);
-  box-shadow: inset 0 4px 8px #000, 0 2px 4px rgba(0,0,0,0.5);
-}
+        .black:active,
+        .black.active {
+            background: linear-gradient(180deg, #444 0%, #222 100%);
+            box-shadow: inset 0 4px 8px #000, 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
 
-.label {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 11px;
-  font-weight: 700;
-  color: #999;
-  letter-spacing: 1px;
-  pointer-events: none;
-}
+        .label {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            font-weight: 700;
+            color: #999;
+            letter-spacing: 1px;
+            pointer-events: none;
+        }
 
-.black .label {
-  bottom: 10px;
-  color: #888;
-  font-size: 10px;
-}
+        .black .label {
+            bottom: 10px;
+            color: #888;
+            font-size: 10px;
+        }
 
-.controls {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+        .controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-.control-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-label {
-  color: #bbb;
-  font-size: 0.85rem;
-}
+        label {
+            color: #bbb;
+            font-size: 0.85rem;
+        }
 
-select, input[type="range"] {
-  background: #2a2a2a;
-  color: #e0e0e0;
-  border: 1px solid #444;
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  outline: none;
-}
+        select {
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            outline: none;
+        }
 
-select:focus, input[type="range"]:focus {
-  border-color: #7c8;
-}
+        select:focus {
+            border-color: #7c8;
+        }
 
-input[type="range"] {
-  width: 100px;
-  accent-color: #7c8;
-}
+        input[type="range"] {
+            background: #2a2a2a;
+            border-radius: 6px;
+            cursor: pointer;
+            outline: none;
+            width: 100px;
+            accent-color: #7c8;
+            padding: 0;
+            /* Diperbaiki agar thumb bisa sampai ujung */
+            height: 16px;
+        }
 
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
 
-.checkbox-label input {
-  accent-color: #7c8;
-  width: 16px;
-  height: 16px;
-}
+        .checkbox-label input {
+            accent-color: #7c8;
+            width: 16px;
+            height: 16px;
+        }
 
-.key-hint {
-  position: absolute;
-  bottom: 34px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 9px;
-  color: #bbb;
-  pointer-events: none;
-  background: rgba(0,0,0,0.5);
-  padding: 2px 6px;
-  border-radius: 4px;
-  opacity: 0;
-  transition: opacity 0.15s;
-}
+        .key-hint {
+            position: absolute;
+            bottom: 34px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: bold;
+            color: #bbb;
+            pointer-events: none;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 6px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
 
-.key:hover .key-hint,
-.key:active .key-hint {
-  opacity: 1;
-}
+        .key:hover .key-hint,
+        .key:active .key-hint,
+        .key.active .key-hint {
+            opacity: 1;
+        }
 
-.black .key-hint {
-  background: rgba(255,255,255,0.15);
-  color: #ddd;
-}
+        .black .key-hint {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            bottom: 28px;
+        }
 
-@media (max-width: 900px) {
-  .piano { height: 200px; }
-  .white { width: 42px; }
-  .black { width: 28px; margin-left: -14px; margin-right: -14px; }
-  .label { font-size: 9px; bottom: 8px; }
-  .key-hint { bottom: 28px; font-size: 8px; }
-  h1 { font-size: 1.4rem; }
-}
+        @media (max-width: 900px) {
+            .piano {
+                height: 200px;
+            }
 
-@media (max-width: 680px) {
-  .piano { height: 160px; }
-  .white { width: 32px; }
-  .black { width: 22px; margin-left: -11px; margin-right: -11px; }
-  .label { font-size: 7px; bottom: 6px; }
-  .key-hint { bottom: 22px; font-size: 7px; padding: 1px 4px; }
-  h1 { font-size: 1.2rem; }
-}
-</style>
+            .white {
+                width: 42px;
+            }
+
+            .black {
+                width: 28px;
+            }
+
+            .label {
+                font-size: 9px;
+                bottom: 8px;
+            }
+
+            .key-hint {
+                bottom: 28px;
+                font-size: 9px;
+            }
+
+            .black .key-hint {
+                bottom: 24px;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .piano {
+                height: 160px;
+            }
+
+            .white {
+                width: 32px;
+            }
+
+            .black {
+                width: 22px;
+            }
+
+            .label {
+                font-size: 7px;
+                bottom: 6px;
+            }
+
+            .key-hint {
+                bottom: 22px;
+                font-size: 8px;
+                padding: 1px 4px;
+            }
+
+            .black .key-hint {
+                bottom: 18px;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="container">
-  <h1>Online Piano</h1>
-  <div class="piano" id="piano"></div>
-  <div class="controls">
-    <div class="control-group">
-      <label>Octave</label>
-      <select id="octave">
-        <option value="3">C3</option>
-        <option value="4" selected>C4</option>
-        <option value="5">C5</option>
-      </select>
+    <div class="container">
+        <h1>Online Piano</h1>
+        <div class="piano" id="piano"></div>
+        <div class="controls">
+            <div class="control-group">
+                <label>Octave</label>
+                <select id="octave">
+                    <option value="3">C3</option>
+                    <option value="4" selected>C4</option>
+                    <option value="5">C5</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Volume</label>
+                <input type="range" id="volume" min="0" max="100" value="70">
+            </div>
+            <div class="control-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="showHints" checked>
+                    Show keys
+                </label>
+            </div>
+            <div class="control-group">
+                <label>Suara</label>
+                <select id="waveform">
+                    <option value="sine">Piano (Sine)</option>
+                    <option value="square">Square</option>
+                    <option value="sawtooth">Sawtooth</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="kodok">Kodok 🐸</option>
+                    <option value="ayam">Ayam 🐔</option>
+                    <option value="bebek">Bebek 🦆</option>
+                    <option value="pistol">Pistol 🔫</option>
+                </select>
+            </div>
+        </div>
     </div>
-    <div class="control-group">
-      <label>Volume</label>
-      <input type="range" id="volume" min="0" max="100" value="70">
-    </div>
-    <div class="control-group">
-      <label class="checkbox-label">
-        <input type="checkbox" id="showHints" checked>
-        Show keys
-      </label>
-    </div>
-    <div class="control-group">
-      <label>Wave</label>
-      <select id="waveform">
-        <option value="sine">Sine</option>
-        <option value="square">Square</option>
-        <option value="sawtooth">Sawtooth</option>
-        <option value="triangle">Triangle</option>
-      </select>
-    </div>
-  </div>
-</div>
 
-<script>
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-const NOTES = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
-const NOTE_FREQS = {};
-for (let oct = 0; oct <= 8; oct++) {
-  for (let n = 0; n < NOTES.length; n++) {
-    const name = NOTES[n] + oct;
-    const semitones = (oct - 4) * 12 + (n - 9);
-    NOTE_FREQS[name] = 440 * Math.pow(2, semitones / 12);
-  }
-}
+        // Generate Frequencies
+        const NOTES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+        const NOTE_FREQS = {};
+        for (let oct = 0; oct <= 8; oct++) {
+            for (let n = 0; n < NOTES.length; n++) {
+                const name = NOTES[n] + oct;
+                const semitones = (oct - 4) * 12 + (n - 9); // A4 = 440Hz
+                NOTE_FREQS[name] = 440 * Math.pow(2, semitones / 12);
+            }
+        }
 
-const KEY_MAP_LOWER = {
-  'a': 'C', 'w': 'Db', 's': 'D', 'e': 'Eb', 'd': 'E', 'f': 'F',
-  't': 'Gb', 'g': 'G', 'y': 'Ab', 'h': 'A', 'u': 'Bb', 'j': 'B'
-};
+        const state = {
+            octave: 4,
+            volume: 0.7,
+            showHints: true,
+            waveform: 'sine',
+            activeKeys: new Map(),
+            keyMap: {},
+            randomBinds: new Map() // Melacak tombol ngacak yang ditekan
+        };
 
-const KEY_MAP_UPPER = {
-  'k': 'C', 'o': 'Db', 'l': 'D', 'p': 'Eb', ';': 'E', '\'': 'F'
-};
+        const pianoEl = document.getElementById('piano');
+        const octaveSelect = document.getElementById('octave');
+        const volumeSlider = document.getElementById('volume');
+        const showHintsCheckbox = document.getElementById('showHints');
+        const waveformSelect = document.getElementById('waveform');
 
-const state = {
-  octave: 4,
-  volume: 0.7,
-  showHints: true,
-  waveform: 'sine',
-  activeKeys: new Map()
-};
+        function playNote(noteName) {
+            if (!NOTE_FREQS[noteName] || state.activeKeys.has(noteName)) return;
+            const freq = NOTE_FREQS[noteName];
+            const type = state.waveform;
 
-const pianoEl = document.getElementById('piano');
-const octaveSelect = document.getElementById('octave');
-const volumeSlider = document.getElementById('volume');
-const showHintsCheckbox = document.getElementById('showHints');
-const waveformSelect = document.getElementById('waveform');
+            const gain = audioCtx.createGain();
+            gain.connect(audioCtx.destination);
 
-function getNoteName(keyIndex, octave) {
-  return NOTES[keyIndex] + octave;
-}
+            let mainOsc = null;
+            let lfoOsc = null; // Ekstra LFO untuk efek hewan
 
-function playNote(noteName) {
-  if (!NOTE_FREQS[noteName]) return;
-  const freq = NOTE_FREQS[noteName];
-  if (state.activeKeys.has(noteName)) return;
+            if (['sine', 'square', 'sawtooth', 'triangle'].includes(type)) {
+                // STANDARD WAVES
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(state.volume, audioCtx.currentTime + 0.02);
 
-  const gain = audioCtx.createGain();
-  gain.gain.setValueAtTime(state.volume, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
-  gain.connect(audioCtx.destination);
+                mainOsc = audioCtx.createOscillator();
+                mainOsc.type = type;
+                mainOsc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                mainOsc.connect(gain);
+                mainOsc.start();
 
-  const osc = audioCtx.createOscillator();
-  osc.type = state.waveform;
-  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-  osc.connect(gain);
-  osc.start();
-  osc.stop(audioCtx.currentTime + 2);
+            } else if (type === 'pistol') {
+                // WHITE NOISE + FILTER (PISTOL)
+                const bufferSize = audioCtx.sampleRate * 1; // 1 detik noise
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
 
-  state.activeKeys.set(noteName, { osc, gain, element: null });
-}
+                mainOsc = audioCtx.createBufferSource();
+                mainOsc.buffer = buffer;
 
-function stopNote(noteName) {
-  const entry = state.activeKeys.get(noteName);
-  if (!entry) return;
-  try {
-    entry.gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-  } catch (e) {}
-  entry.osc.stop(audioCtx.currentTime + 0.2);
-  state.activeKeys.delete(noteName);
-}
+                gain.gain.setValueAtTime(state.volume, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25); // Cepat hilang
 
-function renderPiano() {
-  pianoEl.innerHTML = '';
-  const oct = state.octave;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(2000, audioCtx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
 
-  for (let i = 0; i < 14; i++) {
-    const noteIndex = i % 7;
-    const noteOctave = oct + Math.floor(i / 7);
-    const noteLetter = ['C','D','E','F','G','A','B'][noteIndex];
-    const noteName = noteLetter + noteOctave;
-    const isBlack = [1,2,4,5,6].includes(noteIndex);
+                mainOsc.connect(filter);
+                filter.connect(gain);
+                mainOsc.start();
 
-    if (!isBlack) {
-      const key = document.createElement('button');
-      key.className = 'key white';
-      key.dataset.note = noteName;
+            } else if (type === 'kodok') {
+                // SAWTOOTH + MODULASI LFO (KODOK)
+                mainOsc = audioCtx.createOscillator();
+                mainOsc.type = 'sawtooth';
+                mainOsc.frequency.setValueAtTime(freq * 0.15, audioCtx.currentTime);
 
-      const label = document.createElement('span');
-      label.className = 'label';
-      label.textContent = noteName;
-      key.appendChild(label);
+                lfoOsc = audioCtx.createOscillator();
+                lfoOsc.type = 'square';
+                lfoOsc.frequency.value = 18; // Kecepatan ngorok
 
-      const hint = document.createElement('span');
-      hint.className = 'key-hint';
-      const kb = getKeyForNote(noteName);
-      hint.textContent = kb || '';
-      hint.style.display = state.showHints ? '' : 'none';
-      key.appendChild(hint);
+                const lfoGain = audioCtx.createGain();
+                lfoGain.gain.value = 1;
 
-      key.addEventListener('pointerdown', (e) => {
-        e.preventDefault();
-        audioCtx.resume();
-        playNote(noteName);
-        key.classList.add('active');
-      });
-      key.addEventListener('pointerup', () => {
-        stopNote(noteName);
-        key.classList.remove('active');
-      });
-      key.addEventListener('pointerleave', () => {
-        stopNote(noteName);
-        key.classList.remove('active');
-      });
+                lfoOsc.connect(lfoGain.gain);
+                lfoGain.connect(gain);
+                mainOsc.connect(lfoGain);
 
-      pianoEl.appendChild(key);
-    }
-  }
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(state.volume, audioCtx.currentTime + 0.05);
 
-  // Black keys overlay
-  const blackPositions = [];
-  let whiteCount = 0;
-  for (let i = 0; i < 14; i++) {
-    const noteIndex = i % 7;
-    const noteOctave = oct + Math.floor(i / 7);
-    const isBlack = [1,2,4,5,6].includes(noteIndex);
+                mainOsc.start();
+                lfoOsc.start();
 
-    if (!isBlack) {
-      whiteCount++;
-    } else {
-      const noteLetter = ['Db','Eb','Gb','Ab','Bb'][blackPositions.length];
-      const noteName = noteLetter + noteOctave;
-      blackPositions.push({ noteName, whiteIndex: whiteCount });
-    }
-  }
+            } else if (type === 'ayam') {
+                // PITCH DROP (AYAM)
+                mainOsc = audioCtx.createOscillator();
+                mainOsc.type = 'square';
+                mainOsc.frequency.setValueAtTime(freq * 1.5, audioCtx.currentTime);
+                mainOsc.frequency.exponentialRampToValueAtTime(freq * 0.4, audioCtx.currentTime + 0.15); // Suara jatuh
 
-  const whiteW = window.innerWidth <= 680 ? 32 : window.innerWidth <= 900 ? 42 : 56;
-  const blackW = window.innerWidth <= 680 ? 22 : window.innerWidth <= 900 ? 28 : 36;
+                mainOsc.connect(gain);
 
-  blackPositions.forEach(({ noteName, whiteIndex }) => {
-    const key = document.createElement('button');
-    key.className = 'key black';
-    key.dataset.note = noteName;
-    key.style.position = 'absolute';
-    key.style.left = (whiteIndex * whiteW - blackW / 2) + 'px';
-    key.style.width = blackW + 'px';
-    key.style.top = '0';
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(state.volume, audioCtx.currentTime + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3); // Cluck pendek
 
-    const label = document.createElement('span');
-    label.className = 'label';
-    label.textContent = noteName;
-    key.appendChild(label);
+                mainOsc.start();
 
-    const hint = document.createElement('span');
-    hint.className = 'key-hint';
-    const kb = getKeyForNote(noteName);
-    hint.textContent = kb || '';
-    hint.style.display = state.showHints ? '' : 'none';
-    key.appendChild(hint);
+            } else if (type === 'bebek') {
+                // FILTER SWEEP DOWN (BEBEK)
+                mainOsc = audioCtx.createOscillator();
+                mainOsc.type = 'sawtooth';
+                mainOsc.frequency.setValueAtTime(freq * 0.4, audioCtx.currentTime);
 
-    key.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      audioCtx.resume();
-      playNote(noteName);
-      key.classList.add('active');
-    });
-    key.addEventListener('pointerup', () => {
-      stopNote(noteName);
-      key.classList.remove('active');
-    });
-    key.addEventListener('pointerleave', () => {
-      stopNote(noteName);
-      key.classList.remove('active');
-    });
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.Q.value = 3;
+                filter.frequency.setValueAtTime(1500, audioCtx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.2); // Quack!
 
-    pianoEl.appendChild(key);
-  });
-}
+                mainOsc.connect(filter);
+                filter.connect(gain);
 
-function getKeyForNote(noteName) {
-  for (const [key, val] of Object.entries(KEY_MAP_LOWER)) {
-    if (val + state.octave === noteName) return key;
-  }
-  for (const [key, val] of Object.entries(KEY_MAP_UPPER)) {
-    if (val + (state.octave + 1) === noteName) return key;
-  }
-  return '';
-}
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(state.volume, audioCtx.currentTime + 0.02);
 
-function resolveKeyNote(key) {
-  if (KEY_MAP_LOWER[key]) return KEY_MAP_LOWER[key] + state.octave;
-  if (KEY_MAP_UPPER[key]) return KEY_MAP_UPPER[key] + (state.octave + 1);
-  return null;
-}
+                mainOsc.start();
+            }
 
-function handleKeyDown(e) {
-  if (e.repeat) return;
+            state.activeKeys.set(noteName, { osc: mainOsc, gain, lfo: lfoOsc });
+        }
 
-  const noteName = resolveKeyNote(e.key);
-  if (!noteName) return;
+        function stopNote(noteName) {
+            const entry = state.activeKeys.get(noteName);
+            if (!entry) return;
 
-  e.preventDefault();
-  audioCtx.resume();
-  playNote(noteName);
+            entry.gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.05);
 
-  const el = pianoEl.querySelector(`[data-note="${noteName}"]`);
-  if (el) {
-    el.classList.add('active');
-    const entry = state.activeKeys.get(noteName);
-    if (entry) entry.element = el;
-  }
-}
+            setTimeout(() => {
+                try { entry.osc.stop(); } catch (e) { }
+                if (entry.lfo) try { entry.lfo.stop(); } catch (e) { } // Stop kodok LFO
+            }, 300);
 
-function handleKeyUp(e) {
-  const noteName = resolveKeyNote(e.key);
-  if (!noteName) return;
+            state.activeKeys.delete(noteName);
+        }
 
-  stopNote(noteName);
+        function renderPiano() {
+            pianoEl.innerHTML = '';
+            state.keyMap = {};
+            const oct = state.octave;
 
-  const el = pianoEl.querySelector(`[data-note="${noteName}"]`);
-  if (el) el.classList.remove('active');
-}
+            const whiteNotes = [
+                { letter: 'C', offset: 0, bind: 'a' },
+                { letter: 'D', offset: 0, bind: 's' },
+                { letter: 'E', offset: 0, bind: 'd' },
+                { letter: 'F', offset: 0, bind: 'f' },
+                { letter: 'G', offset: 0, bind: 'g' },
+                { letter: 'A', offset: 0, bind: 'h' },
+                { letter: 'B', offset: 0, bind: 'j' },
+                { letter: 'C', offset: 1, bind: 'k' }
+            ];
 
-octaveSelect.addEventListener('change', () => {
-  state.octave = parseInt(octaveSelect.value);
-  renderPiano();
-});
+            const blackNotes = [
+                { letter: 'Db', offset: 0, whiteIndex: 1, bind: 'w' },
+                { letter: 'Eb', offset: 0, whiteIndex: 2, bind: 'e' },
+                { letter: 'Gb', offset: 0, whiteIndex: 4, bind: 't' },
+                { letter: 'Ab', offset: 0, whiteIndex: 5, bind: 'y' },
+                { letter: 'Bb', offset: 0, whiteIndex: 6, bind: 'u' }
+            ];
 
-volumeSlider.addEventListener('input', () => {
-  state.volume = parseFloat(volumeSlider.value) / 100;
-});
+            const createKeyElement = (noteName, keyBind, type) => {
+                const key = document.createElement('button');
+                key.className = `key ${type}`;
+                key.dataset.note = noteName;
 
-volumeSlider.addEventListener('change', () => {
-  state.volume = parseFloat(volumeSlider.value) / 100;
-});
+                const label = document.createElement('span');
+                label.className = 'label';
+                label.textContent = noteName;
+                key.appendChild(label);
 
-showHintsCheckbox.addEventListener('change', () => {
-  state.showHints = showHintsCheckbox.checked;
-  pianoEl.querySelectorAll('.key-hint').forEach(h => {
-    h.style.display = state.showHints ? '' : 'none';
-  });
-});
+                const hint = document.createElement('span');
+                hint.className = 'key-hint';
+                hint.textContent = keyBind.toUpperCase();
+                hint.style.display = state.showHints ? '' : 'none';
+                key.appendChild(hint);
 
-waveformSelect.addEventListener('change', () => {
-  state.waveform = waveformSelect.value;
-});
+                const start = (e) => {
+                    e.preventDefault();
+                    if (audioCtx.state === 'suspended') audioCtx.resume();
+                    playNote(noteName);
+                    key.classList.add('active');
+                };
+                const stop = (e) => {
+                    e.preventDefault();
+                    stopNote(noteName);
+                    key.classList.remove('active');
+                };
 
-window.addEventListener('resize', renderPiano);
-window.addEventListener('keydown', handleKeyDown);
-window.addEventListener('keyup', handleKeyUp);
+                key.addEventListener('pointerdown', start);
+                key.addEventListener('pointerup', stop);
+                key.addEventListener('pointerleave', stop);
 
-renderPiano();
-</script>
+                return key;
+            };
+
+            whiteNotes.forEach((data) => {
+                const noteName = data.letter + (oct + data.offset);
+                state.keyMap[data.bind] = noteName;
+                const keyEl = createKeyElement(noteName, data.bind, 'white');
+                pianoEl.appendChild(keyEl);
+            });
+
+            const whiteW = window.innerWidth <= 680 ? 32 : window.innerWidth <= 900 ? 42 : 56;
+            const blackW = window.innerWidth <= 680 ? 22 : window.innerWidth <= 900 ? 28 : 36;
+
+            blackNotes.forEach((data) => {
+                const noteName = data.letter + (oct + data.offset);
+                state.keyMap[data.bind] = noteName;
+
+                const keyEl = createKeyElement(noteName, data.bind, 'black');
+                keyEl.style.position = 'absolute';
+                keyEl.style.left = `${(data.whiteIndex * whiteW) - (blackW / 2)}px`;
+                keyEl.style.top = '0';
+
+                pianoEl.appendChild(keyEl);
+            });
+        }
+
+        function handleKeyDown(e) {
+            if (e.repeat) return;
+            let noteName = state.keyMap[e.key.toLowerCase()];
+
+            // Jika menekan sembarang tombol (di luar map)
+            if (!noteName) {
+                const availableNotes = Object.values(state.keyMap);
+                noteName = availableNotes[Math.floor(Math.random() * availableNotes.length)]; // Pilih acak
+                state.randomBinds.set(e.code, noteName); // Simpan agar bisa distop nanti
+            }
+
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            playNote(noteName);
+
+            const el = pianoEl.querySelector(`[data-note="${noteName}"]`);
+            if (el) el.classList.add('active');
+        }
+
+        function handleKeyUp(e) {
+            let noteName = state.keyMap[e.key.toLowerCase()];
+
+            // Deteksi bila yang dilepas adalah tombol sembarang (ngacak)
+            if (!noteName) {
+                noteName = state.randomBinds.get(e.code);
+                state.randomBinds.delete(e.code);
+            }
+
+            if (!noteName) return;
+
+            stopNote(noteName);
+            const el = pianoEl.querySelector(`[data-note="${noteName}"]`);
+            if (el) el.classList.remove('active');
+        }
+
+        octaveSelect.addEventListener('change', () => { state.octave = parseInt(octaveSelect.value); renderPiano(); });
+        volumeSlider.addEventListener('input', () => { state.volume = parseFloat(volumeSlider.value) / 100; });
+        showHintsCheckbox.addEventListener('change', () => {
+            state.showHints = showHintsCheckbox.checked;
+            pianoEl.querySelectorAll('.key-hint').forEach(h => h.style.display = state.showHints ? '' : 'none');
+        });
+        waveformSelect.addEventListener('change', () => { state.waveform = waveformSelect.value; });
+
+        window.addEventListener('resize', renderPiano);
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+
+        renderPiano();
+    </script>
 
 </body>
+
 </html>
