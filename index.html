@@ -199,7 +199,7 @@
             bottom: 59px;
         }
 
-        /* Penyesuaian Responsif */
+        /* Penyesuaian Responsif Tablet & Layar Menengah */
         @media (max-width: 1400px) {
             .piano {
                 height: 420px;
@@ -262,6 +262,81 @@
 
             h1 {
                 font-size: 1.75rem;
+            }
+        }
+
+        /* Penyesuaian Responsif HP (Samsung S21 FE & Smartphone lain) */
+        @media (max-width: 500px) {
+            .container {
+                padding: 15px 10px;
+                gap: 20px;
+            }
+
+            .piano {
+                height: 220px;
+                border-radius: 0 0 16px 16px;
+            }
+
+            .white {
+                width: 40px;
+                /* Pas untuk layar 360px ke atas */
+                border-width: 1px;
+                border-radius: 0 0 8px 8px;
+            }
+
+            .black {
+                width: 26px;
+                border-width: 1px;
+                border-radius: 0 0 8px 8px;
+            }
+
+            .label {
+                font-size: 10px;
+                bottom: 8px;
+            }
+
+            .key-hint {
+                bottom: 28px;
+                font-size: 10px;
+                padding: 2px 5px;
+                border-radius: 4px;
+            }
+
+            .black .key-hint {
+                bottom: 22px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                letter-spacing: 2px;
+            }
+
+            .controls {
+                gap: 12px;
+            }
+
+            .control-group {
+                gap: 6px;
+            }
+
+            label {
+                font-size: 0.9rem;
+            }
+
+            select,
+            input[type="range"] {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+            }
+
+            input[type="range"] {
+                width: 100px;
+                /* Kecilkan slider di HP */
+            }
+
+            .checkbox-label input {
+                width: 16px;
+                height: 16px;
             }
         }
     </style>
@@ -492,6 +567,7 @@
                 hint.style.display = state.showHints ? '' : 'none';
                 key.appendChild(hint);
 
+                // Menggunakan pointer events sangat bagus untuk HP karena menangani sentuhan (touch) dan mouse secara bersamaan
                 const start = (e) => {
                     e.preventDefault();
                     if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -518,9 +594,9 @@
                 pianoEl.appendChild(keyEl);
             });
 
-            // Skala ukuran lebar JS disesuaikan 70% dari yang 3x lipat
-            const whiteW = window.innerWidth <= 900 ? 67 : window.innerWidth <= 1400 ? 88 : 118;
-            const blackW = window.innerWidth <= 900 ? 46 : window.innerWidth <= 1400 ? 59 : 76;
+            // Menambahkan logika ukuran untuk Mobile (< 500px) pada perhitungan JavaScript
+            const whiteW = window.innerWidth <= 500 ? 40 : window.innerWidth <= 900 ? 67 : window.innerWidth <= 1400 ? 88 : 118;
+            const blackW = window.innerWidth <= 500 ? 26 : window.innerWidth <= 900 ? 46 : window.innerWidth <= 1400 ? 59 : 76;
 
             blackNotes.forEach((data) => {
                 const noteName = data.letter + (oct + data.offset);
