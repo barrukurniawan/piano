@@ -279,7 +279,6 @@
 
             .white {
                 width: 40px;
-                /* Pas untuk layar 360px ke atas */
                 border-width: 1px;
                 border-radius: 0 0 8px 8px;
             }
@@ -290,20 +289,32 @@
                 border-radius: 0 0 8px 8px;
             }
 
+            /* Penyesuaian Teks Label Agar Tidak Offside */
             .label {
-                font-size: 10px;
-                bottom: 8px;
+                font-size: 9px;
+                bottom: 6px;
+                letter-spacing: 0;
+                /* Hapus jarak huruf agar tidak melebar */
             }
 
+            .black .label {
+                font-size: 7.5px;
+                /* Lebih kecil khusus tuts hitam */
+                bottom: 6px;
+            }
+
+            /* Penyesuaian Teks Hint Key */
             .key-hint {
-                bottom: 28px;
-                font-size: 10px;
-                padding: 2px 5px;
-                border-radius: 4px;
+                bottom: 24px;
+                font-size: 9px;
+                padding: 2px 4px;
+                border-radius: 3px;
             }
 
             .black .key-hint {
-                bottom: 22px;
+                bottom: 18px;
+                font-size: 8px;
+                padding: 1px 3px;
             }
 
             h1 {
@@ -331,7 +342,6 @@
 
             input[type="range"] {
                 width: 100px;
-                /* Kecilkan slider di HP */
             }
 
             .checkbox-label input {
@@ -567,7 +577,6 @@
                 hint.style.display = state.showHints ? '' : 'none';
                 key.appendChild(hint);
 
-                // Menggunakan pointer events sangat bagus untuk HP karena menangani sentuhan (touch) dan mouse secara bersamaan
                 const start = (e) => {
                     e.preventDefault();
                     if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -594,7 +603,6 @@
                 pianoEl.appendChild(keyEl);
             });
 
-            // Menambahkan logika ukuran untuk Mobile (< 500px) pada perhitungan JavaScript
             const whiteW = window.innerWidth <= 500 ? 40 : window.innerWidth <= 900 ? 67 : window.innerWidth <= 1400 ? 88 : 118;
             const blackW = window.innerWidth <= 500 ? 26 : window.innerWidth <= 900 ? 46 : window.innerWidth <= 1400 ? 59 : 76;
 
