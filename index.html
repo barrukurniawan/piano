@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Piano</title>
+<style>
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #1a1a2e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 20px;
+}
+
+h1 {
+  color: #e0e0e0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.piano {
+  position: relative;
+  display: flex;
+  height: 280px;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.3);
+  overflow: hidden;
+  background: #2a2a2a;
+}
+
+.key {
+  position: relative;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: background 0.05s, box-shadow 0.05s;
+  touch-action: none;
+  -webkit-touch-callout: none;
+}
+
+.white {
+  width: 56px;
+  height: 100%;
+  background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 3%, #e8e8e8 100%);
+  border: 1px solid #bbb;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  z-index: 1;
+}
+
+.white:active,
+.white.active {
+  background: linear-gradient(180deg, #e0e0e0 0%, #d0d0d0 3%, #c8c8c8 100%);
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.black {
+  width: 36px;
+  height: 60%;
+  background: linear-gradient(180deg, #2a2a2a 0%, #111 100%);
+  border: 1px solid #000;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  z-index: 2;
+  margin-left: -18px;
+  margin-right: -18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.black:active,
+.black.active {
+  background: linear-gradient(180deg, #444 0%, #222 100%);
+  box-shadow: inset 0 4px 8px #000, 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.label {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  color: #999;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+.black .label {
+  bottom: 10px;
+  color: #888;
+  font-size: 10px;
+}
+
+.controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+label {
+  color: #bbb;
+  font-size: 0.85rem;
+}
+
+select, input[type="range"] {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  outline: none;
+}
+
+select:focus, input[type="range"]:focus {
+  border-color: #7c8;
+}
+
+input[type="range"] {
+  width: 100px;
+  accent-color: #7c8;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  accent-color: #7c8;
+  width: 16px;
+  height: 16px;
+}
+
+.key-hint {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  color: #bbb;
+  pointer-events: none;
+  background: rgba(0,0,0,0.5);
+  padding: 2px 6px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.key:hover .key-hint,
+.key:active .key-hint {
+  opacity: 1;
+}
+
+.black .key-hint {
+  background: rgba(255,255,255,0.15);
+  color: #ddd;
+}
+
+@media (max-width: 900px) {
+  .piano { height: 200px; }
+  .white { width: 42px; }
+  .black { width: 28px; margin-left: -14px; margin-right: -14px; }
+  .label { font-size: 9px; bottom: 8px; }
+  .key-hint { bottom: 28px; font-size: 8px; }
+  h1 { font-size: 1.4rem; }
+}
+
+@media (max-width: 680px) {
+  .piano { height: 160px; }
+  .white { width: 32px; }
+  .black { width: 22px; margin-left: -11px; margin-right: -11px; }
+  .label { font-size: 7px; bottom: 6px; }
+  .key-hint { bottom: 22px; font-size: 7px; padding: 1px 4px; }
+  h1 { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Online Piano</h1>
+  <div class="piano" id="piano"></div>
+  <div class="controls">
+    <div class="control-group">
+      <label>Octave</label>
+      <select id="octave">
+        <option value="3">C3</option>
+        <option value="4" selected>C4</option>
+        <option value="5">C5</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Volume</label>
+      <input type="range" id="volume" min="0" max="100" value="70">
+    </div>
+    <div class="control-group">
+      <label class="checkbox-label">
+        <input type="checkbox" id="showHints" checked>
+        Show keys
+      </label>
+    </div>
+    <div class="control-group">
+      <label>Wave</label>
+      <select id="waveform">
+        <option value="sine">Sine</option>
+        <option value="square">Square</option>
+        <option value="sawtooth">Sawtooth</option>
+        <option value="triangle">Triangle</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<script>
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+const NOTES = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+const NOTE_FREQS = {};
+for (let oct = 0; oct <= 8; oct++) {
+  for (let n = 0; n < NOTES.length; n++) {
+    const name = NOTES[n] + oct;
+    const semitones = (oct - 4) * 12 + (n - 9);
+    NOTE_FREQS[name] = 440 * Math.pow(2, semitones / 12);
+  }
+}
+
+const KEY_MAP_LOWER = {
+  'a': 'C', 'w': 'Db', 's': 'D', 'e': 'Eb', 'd': 'E', 'f': 'F',
+  't': 'Gb', 'g': 'G', 'y': 'Ab', 'h': 'A', 'u': 'Bb', 'j': 'B'
+};
+
+const KEY_MAP_UPPER = {
+  'k': 'C', 'o': 'Db', 'l': 'D', 'p': 'Eb', ';': 'E', '\'': 'F'
+};
+
+const state = {
+  octave: 4,
+  volume: 0.7,
+  showHints: true,
+  waveform: 'sine',
+  activeKeys: new Map()
+};
+
+const pianoEl = document.getElementById('piano');
+const octaveSelect = document.getElementById('octave');
+const volumeSlider = document.getElementById('volume');
+const showHintsCheckbox = document.getElementById('showHints');
+const waveformSelect = document.getElementById('waveform');
+
+function getNoteName(keyIndex, octave) {
+  return NOTES[keyIndex] + octave;
+}
+
+function playNote(noteName) {
+  if (!NOTE_FREQS[noteName]) return;
+  const freq = NOTE_FREQS[noteName];
+  if (state.activeKeys.has(noteName)) return;
+
+  const gain = audioCtx.createGain();
+  gain.gain.setValueAtTime(state.volume, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
+  gain.connect(audioCtx.destination);
+
+  const osc = audioCtx.createOscillator();
+  osc.type = state.waveform;
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  osc.connect(gain);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 2);
+
+  state.activeKeys.set(noteName, { osc, gain, element: null });
+}
+
+function stopNote(noteName) {
+  const entry = state.activeKeys.get(noteName);
+  if (!entry) return;
+  try {
+    entry.gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+  } catch (e) {}
+  entry.osc.stop(audioCtx.currentTime + 0.2);
+  state.activeKeys.delete(noteName);
+}
+
+function renderPiano() {
+  pianoEl.innerHTML = '';
+  const oct = state.octave;
+
+  for (let i = 0; i < 14; i++) {
+    const noteIndex = i % 7;
+    const noteOctave = oct + Math.floor(i / 7);
+    const noteLetter = ['C','D','E','F','G','A','B'][noteIndex];
+    const noteName = noteLetter + noteOctave;
+    const isBlack = [1,2,4,5,6].includes(noteIndex);
+
+    if (!isBlack) {
+      const key = document.createElement('button');
+      key.className = 'key white';
+      key.dataset.note = noteName;
+
+      const label = document.createElement('span');
+      label.className = 'label';
+      label.textContent = noteName;
+      key.appendChild(label);
+
+      const hint = document.createElement('span');
+      hint.className = 'key-hint';
+      const kb = getKeyForNote(noteName);
+      hint.textContent = kb || '';
+      hint.style.display = state.showHints ? '' : 'none';
+      key.appendChild(hint);
+
+      key.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        audioCtx.resume();
+        playNote(noteName);
+        key.classList.add('active');
+      });
+      key.addEventListener('pointerup', () => {
+        stopNote(noteName);
+        key.classList.remove('active');
+      });
+      key.addEventListener('pointerleave', () => {
+        stopNote(noteName);
+        key.classList.remove('active');
+      });
+
+      pianoEl.appendChild(key);
+    }
+  }
+
+  // Black keys overlay
+  const blackPositions = [];
+  let whiteCount = 0;
+  for (let i = 0; i < 14; i++) {
+    const noteIndex = i % 7;
+    const noteOctave = oct + Math.floor(i / 7);
+    const isBlack = [1,2,4,5,6].includes(noteIndex);
+
+    if (!isBlack) {
+      whiteCount++;
+    } else {
+      const noteLetter = ['Db','Eb','Gb','Ab','Bb'][blackPositions.length];
+      const noteName = noteLetter + noteOctave;
+      blackPositions.push({ noteName, whiteIndex: whiteCount });
+    }
+  }
+
+  const whiteW = window.innerWidth <= 680 ? 32 : window.innerWidth <= 900 ? 42 : 56;
+  const blackW = window.innerWidth <= 680 ? 22 : window.innerWidth <= 900 ? 28 : 36;
+
+  blackPositions.forEach(({ noteName, whiteIndex }) => {
+    const key = document.createElement('button');
+    key.className = 'key black';
+    key.dataset.note = noteName;
+    key.style.position = 'absolute';
+    key.style.left = (whiteIndex * whiteW - blackW / 2) + 'px';
+    key.style.width = blackW + 'px';
+    key.style.top = '0';
+
+    const label = document.createElement('span');
+    label.className = 'label';
+    label.textContent = noteName;
+    key.appendChild(label);
+
+    const hint = document.createElement('span');
+    hint.className = 'key-hint';
+    const kb = getKeyForNote(noteName);
+    hint.textContent = kb || '';
+    hint.style.display = state.showHints ? '' : 'none';
+    key.appendChild(hint);
+
+    key.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      audioCtx.resume();
+      playNote(noteName);
+      key.classList.add('active');
+    });
+    key.addEventListener('pointerup', () => {
+      stopNote(noteName);
+      key.classList.remove('active');
+    });
+    key.addEventListener('pointerleave', () => {
+      stopNote(noteName);
+      key.classList.remove('active');
+    });
+
+    pianoEl.appendChild(key);
+  });
+}
+
+function getKeyForNote(noteName) {
+  for (const [key, val] of Object.entries(KEY_MAP_LOWER)) {
+    if (val + state.octave === noteName) return key;
+  }
+  for (const [key, val] of Object.entries(KEY_MAP_UPPER)) {
+    if (val + (state.octave + 1) === noteName) return key;
+  }
+  return '';
+}
+
+function resolveKeyNote(key) {
+  if (KEY_MAP_LOWER[key]) return KEY_MAP_LOWER[key] + state.octave;
+  if (KEY_MAP_UPPER[key]) return KEY_MAP_UPPER[key] + (state.octave + 1);
+  return null;
+}
+
+function handleKeyDown(e) {
+  if (e.repeat) return;
+
+  const noteName = resolveKeyNote(e.key);
+  if (!noteName) return;
+
+  e.preventDefault();
+  audioCtx.resume();
+  playNote(noteName);
+
+  const el = pianoEl.querySelector(`[data-note="${noteName}"]`);
+  if (el) {
+    el.classList.add('active');
+    const entry = state.activeKeys.get(noteName);
+    if (entry) entry.element = el;
+  }
+}
+
+function handleKeyUp(e) {
+  const noteName = resolveKeyNote(e.key);
+  if (!noteName) return;
+
+  stopNote(noteName);
+
+  const el = pianoEl.querySelector(`[data-note="${noteName}"]`);
+  if (el) el.classList.remove('active');
+}
+
+octaveSelect.addEventListener('change', () => {
+  state.octave = parseInt(octaveSelect.value);
+  renderPiano();
+});
+
+volumeSlider.addEventListener('input', () => {
+  state.volume = parseFloat(volumeSlider.value) / 100;
+});
+
+volumeSlider.addEventListener('change', () => {
+  state.volume = parseFloat(volumeSlider.value) / 100;
+});
+
+showHintsCheckbox.addEventListener('change', () => {
+  state.showHints = showHintsCheckbox.checked;
+  pianoEl.querySelectorAll('.key-hint').forEach(h => {
+    h.style.display = state.showHints ? '' : 'none';
+  });
+});
+
+waveformSelect.addEventListener('change', () => {
+  state.waveform = waveformSelect.value;
+});
+
+window.addEventListener('resize', renderPiano);
+window.addEventListener('keydown', handleKeyDown);
+window.addEventListener('keyup', handleKeyUp);
+
+renderPiano();
+</script>
+
+</body>
+</html>
